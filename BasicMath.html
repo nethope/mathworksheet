@@ -1,0 +1,73 @@
+<html>
+<head>
+<title>Math WorkSheet</title>
+<script type="text/javascript">
+// For: http://codingforums.com/showthread.php?t=184125
+
+var NProblems = 25;
+var xvals = [];
+var yvals = [];
+for (var i=0; i<NProblems; i++) {
+//  xvals.push(i);    yvals.push(i+1);  		// limit to problem values to (0,1) ... 25
+  xvals.push(i % 10);    yvals.push((i % 10)+1);  	// limit to single digit problems
+}
+
+function MakeTable(act) {
+  var tmp = '';
+  var str = '<table border="1" width="80%"><tr>';
+  i = 0;
+  while (i < NProblems) {
+    x = xvals[i];
+    y = yvals[i];
+    str += '<td align="right">'+x;
+    if (act == 'add') { str += '<br>+ '+y; tmp = x+y; }
+    if (act == 'sub') { str += '<br>- '+y; tmp = x-y; }
+    if (act == 'mul') { str += '<br>* '+y; tmp = x*y; }
+    if (act == 'div') { str += '<br>/ '+y; tmp = (x/y).toFixed(2); }
+    str += '<br>_____';
+    if (document.getElementById('answers').checked) { str += '<br>'+tmp; }
+                                               else { str += '<br>&nbsp;' }
+    str += '<br>&nbsp;</td>';
+    i++;  
+    if ((i % 5) == 0) { str += '</tr><tr>'; }
+  }  
+  str += '</tr></table>';
+  return str;
+}
+
+function GenerateWS() {
+  var x = 0;  var y = 0;  var str = '';
+  var str = '';
+  var sel = document.getElementById('MathAction').value;
+  switch (sel) {
+    case 'add' : str += MakeTable(sel); break;
+    case 'sub' : str += MakeTable(sel); break;
+    case 'mul' : str += MakeTable(sel); break;
+    case 'div' : str += MakeTable(sel); break;
+    default : alert('No choice selected'); break;
+  }
+  document.getElementById('TBL').innerHTML = str;
+}
+function randOrd() {
+  return (Math.round(Math.random())-0.5);
+}
+function NewSet() {
+  xvals.sort(randOrd);
+  yvals.sort(randOrd);
+}
+
+</script>
+</head>
+<body>
+<select id="MathAction">
+ <option value="add">Addition</option>
+ <option value="sub">Subtraction</option>
+ <option value="mul">Multiplication</option>
+ <option value="div">Division</option>
+</select>
+<button onclick="NewSet()">New worksheet</button>
+<input type="checkbox" id="answers">Show Answers 
+<button onclick="GenerateWS()">Generate Worksheet</button>
+<div id="TBL"></div>
+</body>
+</html>
