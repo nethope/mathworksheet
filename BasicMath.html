@@ -1,29 +1,99 @@
 <html>
 <head>
 <title>Math Worksheet</title>
+</head>
+
+<body>
+  <p>
+    <strong> &nbsp; &nbsp; &nbsp; Configuration</strong>
+    <br /> Number of Problems:
+    <input type="text" id="NumProb" size="5" onchange="NewConfig()">
+    <br /> Number of Columns on the Page:
+    <input type="text" id="ColPage" size="5" onchange="NewConfig()">
+    <br /> Minimum Value:
+    <input type="text" id="MinVal" size="5" onchange="NewConfig()">
+    <br /> Maximum Value:
+    <input type="text" id="MaxVal" size="5" onchange="NewConfig()">
+    <br /> Should top number always be larger than bottom number?:
+    <input type="checkbox" id="ReMax" onchange="NewConfig()">
+    <br /> Worksheet Type:
+    <select name="MathAction" id="MathAction">
+      <option value="add">Addition</option>
+      <option value="sub">Subtraction</option>
+      <option value="mul">Multiplication</option>
+      <option value="div">Division</option>
+    </select>
+  </p>
+  <hr />
+  <p>
+    <button onclick="NewSet()">New worksheet</button>
+    <br />
+    <button onclick="GenerateWS()">Generate Worksheet</button>
+    <input type="checkbox" id="answers">Show Answers
+    <div id="TBL"></div>
+  </p>
+  <p><div id="test"></div></p>
+</body>
+
 <script type="text/javascript">
 //   For: http://codingforums.com/showthread.php?t=184125
 // From: http://www.codingforums.com/javascript-programming/184125-creating-math-sheet-generator.html
 // THANKS to jmrker!
 //   With a side of http://stackoverflow.com/a/1527834 for random numbers
 // var randomnumber = Math.floor(Math.random() * (maximum - minimum + 1)) + minimum;
+//   User can change variables from browser
+// see http://stackoverflow.com/questions/23982774/turn-html-form-input-into-javascript-variable
+// some http://stackoverflow.com/questions/15393935/boolean-in-an-if-statement
+// User can also require that the top number be larger (useful for simple subtraction).
+// Now with a debug mode!
+
+var Debug = false;
+if (Debug === true) {
+  document.getElementById("test").innerHTML += "<hr /><br />DEBUG MODE ACTIVE";
+  document.getElementById("test").innerHTML += "<br /><button onclick=\"ShowConfig()\">show current configuration</button> <button onclick=\"NewConfig()\">load new configuration</button>";
+}
 
 var NumberOfProblems = 15;
 var ColumnsOnPage = 3;
 var MinimumValue = 0;
 var MaximumValue = 999;
+var TopBigger = false;
+
+document.getElementById("NumProb").value = NumberOfProblems;
+document.getElementById("ColPage").value = ColumnsOnPage;
+document.getElementById("MinVal").value = MinimumValue;
+document.getElementById("MaxVal").value = MaximumValue;
+document.getElementById("ReMax").checked = TopBigger;
+
+if (Debug === true) {
+  document.getElementById("test").innerHTML += "<br />debug: worksheet variables defined and filled in<br />";
+}
 
 var xvals = [];
 var yvals = [];
 for (var i=0; i<NumberOfProblems; i++) {
-  // random number in range
+  // random numbers in range
   xvals.push(Math.floor(Math.random() * (MaximumValue - MinimumValue + 1)) + MinimumValue);
-  yvals.push(Math.floor(Math.random() * (MaximumValue - MinimumValue + 1)) + MinimumValue);
-  // yvals will always be less than xvals for any given pair this way:
-  // yvals.push(Math.floor(Math.random() * (xvals[i] - MinimumValue + 1)) + MinimumValue);
+  if (TopBigger === true) {
+    yvals.push(Math.floor(Math.random() * (xvals[i] - MinimumValue + 1)) + MinimumValue);
+  } else {
+    // TopBigger === false; // pick any in-range random value
+    yvals.push(Math.floor(Math.random() * (MaximumValue - MinimumValue + 1)) + MinimumValue);
+  }
+  if (Debug === true) {
+    document.getElementById("test").innerHTML += ".";
+  }
+}
+
+if (Debug === true) {
+  document.getElementById("test").innerHTML += "<br />debug: random numbers picked for array";
 }
 
 function MakeTable(act) {
+  if (Debug === true) {
+    document.getElementById("test").innerHTML += "<br />debug: starting to make table for: ";
+    document.getElementById("test").innerHTML += act;
+  }
   var tmp = '';
   var str = '<table border="1" width="80%"><tr>';
   i = 0;
@@ -40,16 +110,21 @@ function MakeTable(act) {
                                                else { str += '<br>&nbsp;' }
     str += '<br>&nbsp;</td>';
     i++;  
-    if ((i % 5) == 0) { str += '</tr><tr>'; }
+    if ((i % ColumnsOnPage) == 0) { str += '</tr><tr>'; }
   }  
   str += '</tr></table>';
   return str;
 }
 
 function GenerateWS() {
-  var x = 0;  var y = 0;  var str = '';
+  var x = 0
+  var y = 0
   var str = '';
   var sel = document.getElementById('MathAction').value;
+  if (Debug === true) {
+    document.getElementById("test").innerHTML += "<br />debug: starting to generate table for: ";
+    document.getElementById("test").innerHTML += sel;
+  }
   switch (sel) {
     case 'add' : str += MakeTable(sel); break;
     case 'sub' : str += MakeTable(sel); break;
@@ -59,26 +134,74 @@ function GenerateWS() {
   }
   document.getElementById('TBL').innerHTML = str;
 }
+
 function randOrd() {
-  return (Math.round(Math.random())-0.5);
+  return (Math.round(Math.random()) - 0.5);
 }
+
 function NewSet() {
   xvals.sort(randOrd);
   yvals.sort(randOrd);
 }
-</script>
-</head>
 
-<body>
-<select id="MathAction">
-  <option value="add">Addition</option>
-  <option value="sub">Subtraction</option>
-  <option value="mul">Multiplication</option>
-  <option value="div">Division</option>
-</select>
-<button onclick="NewSet()">New worksheet</button>
-<input type="checkbox" id="answers">Show Answers 
-<button onclick="GenerateWS()">Generate Worksheet</button>
-<div id="TBL"></div>
+function NewConfig() {
+  if (Debug === true) {
+    document.getElementById("test").innerHTML += "<br />debug: starting new config with ";
+    document.getElementById("test").innerHTML += NumberOfProblems;
+    document.getElementById("test").innerHTML += " ";
+    document.getElementById("test").innerHTML += ColumnsOnPage;
+    document.getElementById("test").innerHTML += " ";
+    document.getElementById("test").innerHTML += MinimumValue;
+    document.getElementById("test").innerHTML += " ";
+    document.getElementById("test").innerHTML += MaximumValue;
+    document.getElementById("test").innerHTML += " ";
+    document.getElementById("test").innerHTML += TopBigger;
+  }
+  
+  NumberOfProblems = document.getElementById("NumProb").value;
+  ColumnsOnPage = document.getElementById("ColPage").value;
+  MinimumValue = document.getElementById("MinVal").value;
+  MaximumValue = document.getElementById("MaxVal").value;
+  TopBigger = document.getElementById("ReMax").checked;
+
+  if (Debug === true) {
+    document.getElementById("test").innerHTML += "<br />debug: finished NewConfig() with ";
+    document.getElementById("test").innerHTML += NumberOfProblems;
+    document.getElementById("test").innerHTML += " ";
+    document.getElementById("test").innerHTML += ColumnsOnPage;
+    document.getElementById("test").innerHTML += " ";
+    document.getElementById("test").innerHTML += MinimumValue;
+    document.getElementById("test").innerHTML += " ";
+    document.getElementById("test").innerHTML += MaximumValue;
+    document.getElementById("test").innerHTML += " ";
+    document.getElementById("test").innerHTML += TopBigger;
+  }
+}
+
+function ShowConfig() {
+  document.getElementById("NumProb").value = NumberOfProblems;
+  document.getElementById("ColPage").value = ColumnsOnPage;
+  document.getElementById("MinVal").value = MinimumValue;
+  document.getElementById("MaxVal").value = MaximumValue;
+  document.getElementById("ReMax").value = TopBigger;
+
+  if (Debug === true) {
+    document.getElementById("test").innerHTML += "<br />debug: ran ShowConfig with ";
+    document.getElementById("test").innerHTML += NumberOfProblems;
+    document.getElementById("test").innerHTML += " ";
+    document.getElementById("test").innerHTML += ColumnsOnPage;
+    document.getElementById("test").innerHTML += " ";
+    document.getElementById("test").innerHTML += MinimumValue;
+    document.getElementById("test").innerHTML += " ";
+    document.getElementById("test").innerHTML += MaximumValue;
+    document.getElementById("test").innerHTML += " ";
+    document.getElementById("test").innerHTML += TopBigger;
+  }
+}
+
+if (Debug === true) {
+  document.getElementById("test").innerHTML += "<br />debug: at the bottom";
+}
+</script>
 </body>
 </html>
