@@ -2,21 +2,25 @@
 <head>
 <title>Math Worksheet</title>
 <script type="text/javascript">
-// For: http://codingforums.com/showthread.php?t=184125
+//   For: http://codingforums.com/showthread.php?t=184125
 // From: http://www.codingforums.com/javascript-programming/184125-creating-math-sheet-generator.html
-// THANKS and credit to jmrker!!!
+// THANKS to jmrker!
+//   With a side of http://stackoverflow.com/a/1527834 for random numbers
+// var randomnumber = Math.floor(Math.random() * (maximum - minimum + 1)) + minimum;
 
-var NumberOfProblems = 25;
+var NumberOfProblems = 15;
+var ColumnsOnPage = 3;
+var MinimumValue = 0;
+var MaximumValue = 999;
+
 var xvals = [];
 var yvals = [];
 for (var i=0; i<NumberOfProblems; i++) {
-  // limit to problem values to (0,1) ... 25
-  // xvals.push(i);
-  // yvals.push(i+1);
-
-  // limit to single digit problems
-  xvals.push(i % 10);
-  yvals.push((i % 10)+1);
+  // random number in range
+  xvals.push(Math.floor(Math.random() * (MaximumValue - MinimumValue + 1)) + MinimumValue);
+  yvals.push(Math.floor(Math.random() * (MaximumValue - MinimumValue + 1)) + MinimumValue);
+  // yvals will always be less than xvals for any given pair this way:
+  // yvals.push(Math.floor(Math.random() * (xvals[i] - MinimumValue + 1)) + MinimumValue);
 }
 
 function MakeTable(act) {
