@@ -1,6 +1,26 @@
 <html>
 <head>
-<title>Math Worksheet</title>
+  <title>Math Worksheet</title>
+  <style>
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      #TBL, #TBL * {
+        visibility: visible;
+      }
+      #TBL, #worksheet {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 90%;
+        height: 100%;
+      }
+      table, th, td {
+        border: none;
+      }
+    }
+  </style>
 </head>
 
 <body><p>
@@ -44,19 +64,23 @@
 //   User can change variables from browser
 // see http://stackoverflow.com/questions/23982774/turn-html-form-input-into-javascript-variable
 // some http://stackoverflow.com/questions/15393935/boolean-in-an-if-statement
-// User can also require that the top number be larger (useful for non-negative subtraction).
+// User can also require that the top number be larger (useful for
+// non-negative subtraction).
 // Now with a debug mode!
 //   Option for a completely new set of random numbers
-// keep option "scramble": the same random numbers in a different order (and different pairings)
+// keep option "scramble": the same random numbers in a different
+// order (and different pairings)
 // clearing an existing array for NewSet is tricky!
 // http://stackoverflow.com/questions/1232040/how-do-i-empty-an-array-in-javascript
 //   Bug fixed with parseInt (because Javascript is loosely typed):
 // RandomSet only worked on page load, and then subsequent calls used
-// string (not math) addition (ugh!)
+// string concatenation, not math addition, for '+' (ugh!).
 // http://stackoverflow.com/questions/3638074/adding-two-numbers-in-javascript-incorrectly/4600744#4600744
 //   Known Issue: "Scramble" does not attempt to respect top number
 // larger than bottom number setting; it ONLY scrambles the order of
 // the top numbers (xvals) and the order of the bottom numbers (yvals).
+//   Print just the worksheet
+// http://stackoverflow.com/questions/468881/print-div-id-printarea-div-only/2618980#2618980
 
 var Debug = false;
 if (Debug === true) {
@@ -160,7 +184,7 @@ function MakeTable(act) {
     document.getElementById("test").innerHTML += "<br /> debug: MakeTable to " + act;
   }
   var tmp = '';
-  var str = '<table border="1" width="80%"><tr>';
+  var str = '<table border="1" width="80%" id="worksheet"><tr>';
   i = 0;
   while (i < NumberOfProblems) {
     x = xvals[i];
