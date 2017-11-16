@@ -8,7 +8,7 @@ I originally published this generator on [Codeplex](https://mathworksheet.codepl
 
 ## Usage
 
-The general procedure is to make any desired adjustments, and then click on the "Generate Worksheet" button. After your broswer displays the worksheet, you may print it to a printer, or print it to a file.
+The general procedure is to make any desired adjustments, and then click on the "Generate Worksheet" button. After your browser displays the worksheet, you may print it to a printer, or print it to a file.
 
 The configuration and the actions will not print, just the worksheet; however, browser settings (like page numbers and file location) may print depending on your browser's configuration.
 
